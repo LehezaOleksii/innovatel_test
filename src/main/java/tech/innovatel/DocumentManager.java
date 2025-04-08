@@ -129,7 +129,7 @@ public class DocumentManager {
         boolean isBeforeTo = to == null || (created != null && !created.isAfter(to));
 
         return isAfterFrom && isBeforeTo;
-    }
+    } 
 
     @Data
     @Builder
