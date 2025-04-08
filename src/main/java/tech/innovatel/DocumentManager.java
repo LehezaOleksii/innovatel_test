@@ -1,7 +1,9 @@
 package tech.innovatel;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.*;
@@ -31,13 +33,22 @@ public class DocumentManager {
         if (document == null) {
             throw new IllegalArgumentException("Document is null while saving");
         }
-        String id = document.getId().trim();
+        Document documentToSave;
+        String id = document.getId();
         if (id == null || id.isEmpty()) {
             id = UUID.randomUUID().toString();
-            document.setId(id);
+        } else {
+            id = id.trim();
         }
-        fakeDatabase.put(id, document);
-        return document;
+        documentToSave = Document.builder()
+                .id(id)
+                .title(document.getTitle())
+                .content(document.getContent())
+                .author(document.getAuthor())
+                .created(document.getCreated())
+                .build();
+        fakeDatabase.put(id, documentToSave);
+        return documentToSave;
     }
 
     /**
@@ -136,7 +147,9 @@ public class DocumentManager {
     }
 
     @Data
-    @Builder
+    @Builder(toBuilder = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Document {
         private String id;
         private String title;
