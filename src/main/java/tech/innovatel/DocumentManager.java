@@ -63,36 +63,60 @@ public class DocumentManager {
 
     private boolean isTitleMatched(Document document, SearchRequest request) {
         List<String> prefixes = request.getTitlePrefixes();
-        return prefixes == null || prefixes.isEmpty()
-                || (document.getTitle() != null && prefixes.stream()
+        if (prefixes == null || prefixes.isEmpty()) {
+            return true;
+        }
+        String title = document.getTitle();
+        if (title == null) {
+            return false;
+        }
+        return prefixes.stream()
                 .filter(Objects::nonNull)
-                .anyMatch(prefix -> document.getTitle().startsWith(prefix)));
+                .anyMatch(title::startsWith);
     }
+
 
     private boolean isContentMatched(Document document, SearchRequest request) {
         List<String> contents = request.getContainsContents();
-        return contents == null || contents.isEmpty()
-                || (document.getContent() != null && contents.stream()
+        if (contents == null || contents.isEmpty()) {
+            return true;
+        }
+        String content = document.getContent();
+        if (content == null) {
+            return false;
+        }
+        return contents.stream()
                 .filter(Objects::nonNull)
-                .anyMatch(substring -> document.getContent().contains(substring)));
+                .anyMatch(content::contains);
     }
+
 
     private boolean isAuthorMatched(Document document, SearchRequest request) {
         List<String> authorIds = request.getAuthorIds();
-        return authorIds == null || authorIds.isEmpty()
-                || (document.getAuthor() != null && document.getAuthor().getId() != null &&
-                authorIds.stream()
-                        .filter(Objects::nonNull)
-                        .anyMatch(authorId -> document.getAuthor().getId().equals(authorId)));
+        if (authorIds == null || authorIds.isEmpty()) {
+            return true;
+        }
+        Author author = document.getAuthor();
+        String authorId = author != null ? author.getId() : null;
+        if (authorId == null) {
+            return false;
+        }
+        return authorIds.stream()
+                .filter(Objects::nonNull)
+                .anyMatch(authorId::equals);
     }
 
-    private boolean isCreatedInRange(Document document, SearchRequest request) {
-        Instant created = document.getCreated();
+    private boolean isCreatedInRange(Document doc, SearchRequest request) {
+        Instant created = doc.getCreated();
         Instant from = request.getCreatedFrom();
         Instant to = request.getCreatedTo();
-        return (from == null || (created != null && !created.isBefore(from)))
-                && (to == null || (created != null && !created.isAfter(to)));
+
+        boolean isAfterFrom = from == null || (created != null && !created.isBefore(from));
+        boolean isBeforeTo = to == null || (created != null && !created.isAfter(to));
+
+        return isAfterFrom && isBeforeTo;
     }
+
 
     /**
      * Implementation this method should find document by id
