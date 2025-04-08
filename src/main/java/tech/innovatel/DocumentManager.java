@@ -36,13 +36,6 @@ public class DocumentManager {
             id = UUID.randomUUID().toString();
             document.setId(id);
         }
-        document = Document.builder()
-                .id(id)
-                .title(document.getTitle())
-                .content(document.getContent())
-                .author(document.getAuthor())
-                .created(document.getCreated())
-                .build();
         fakeDatabase.put(id, document);
         return document;
     }
