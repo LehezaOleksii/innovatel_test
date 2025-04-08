@@ -37,6 +37,7 @@ public class DocumentManager {
             document.setId(id);
         }
         document = Document.builder()
+                .id(id)
                 .title(document.getTitle())
                 .content(document.getContent())
                 .author(document.getAuthor())
@@ -129,7 +130,7 @@ public class DocumentManager {
         boolean isBeforeTo = to == null || (created != null && !created.isAfter(to));
 
         return isAfterFrom && isBeforeTo;
-    } 
+    }
 
     @Data
     @Builder
