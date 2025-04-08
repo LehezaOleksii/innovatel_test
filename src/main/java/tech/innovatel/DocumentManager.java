@@ -33,14 +33,13 @@ public class DocumentManager {
         if (document == null) {
             throw new IllegalArgumentException("Document is null while saving");
         }
-        Document documentToSave;
         String id = document.getId();
         if (id == null || id.isEmpty()) {
             id = UUID.randomUUID().toString();
         } else {
             id = id.trim();
         }
-        documentToSave = Document.builder()
+        Document documentToSave = Document.builder()
                 .id(id)
                 .title(document.getTitle())
                 .content(document.getContent())
