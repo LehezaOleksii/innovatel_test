@@ -61,6 +61,20 @@ public class DocumentManager {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Implementation this method should find document by id
+     *
+     * @param id - document id
+     * @return optional document
+     */
+    public Optional<Document> findById(String id) {
+        if (id == null || id.isEmpty()) {
+            return Optional.empty();
+        }
+        id = id.trim();
+        return Optional.ofNullable(fakeDatabase.get(id));
+    }
+
     private boolean isTitleMatched(Document document, SearchRequest request) {
         List<String> prefixes = request.getTitlePrefixes();
         if (prefixes == null || prefixes.isEmpty()) {
@@ -115,21 +129,6 @@ public class DocumentManager {
         boolean isBeforeTo = to == null || (created != null && !created.isAfter(to));
 
         return isAfterFrom && isBeforeTo;
-    }
-
-
-    /**
-     * Implementation this method should find document by id
-     *
-     * @param id - document id
-     * @return optional document
-     */
-    public Optional<Document> findById(String id) {
-        if (id == null || id.isEmpty()) {
-            return Optional.empty();
-        }
-        id = id.trim();
-        return Optional.ofNullable(fakeDatabase.get(id));
     }
 
     @Data
